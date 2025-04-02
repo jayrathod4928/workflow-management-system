@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { Box, Button, Checkbox, FormControlLabel, Grid, Paper, TextField, Typography, Alert, Divider } from "@mui/material";
-import { Google, Facebook, Apple } from "@mui/icons-material";
+import { GoogleIcon } from "@/components/Icons/GoogleIcon";
+import { FacebookIcon } from "@/components/Icons/FacebookIcon";
+import { AppleIcon } from "@/components/Icons/AppleIcon";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
@@ -48,169 +50,165 @@ const LoginPage = () => {
             />
 
             <Grid container sx={{ height: "100vh" }}>
-                <Box sx={{
-                    display: "flex",
-                    gap: '550px'
-                }}>
-                <Grid
-                    item
-                    xs={12}
-                    md={6}
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        paddingLeft: '200px',
-                    }}
-                >
-                    <Box>
-                        <img src="/logo_highbridge.svg" alt="HighBridge Logo" width="273px" height="60px" />
+                <Box sx={{ display: "flex", gap: '550px' }}>
+                    <Grid item xs={12} md={6} sx={{ display: "flex", flexDirection: "column", justifyContent: "center", paddingLeft: '200px' }}>
+                        <Box>
+                            <img src="/logo_highbridge.svg" alt="HighBridge Logo" width="273px" height="60px" />
 
-                        <Typography
-                            variant="h4"
-                            fontWeight="bold"
+                            <Typography variant="h4" fontWeight="bold" sx={{ textAlign: "left", mt: 4 }}>
+                                Building the Future...
+                            </Typography>
+
+                            <Typography variant="body1" sx={{ textAlign: "left", maxWidth: "380px", mt: 1 }}>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            </Typography>
+                        </Box>
+                    </Grid>
+
+                    <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center", alignItems: "center", position: "relative", height: "100vh" }}>
+                        <Paper
+                            elevation={6}
                             sx={{
-                                textAlign: "left",
-                                mt: 4,
+                                width: "90vw",
+                                maxWidth: "400px",
+                                padding: 4,
+                                borderRadius: "24px 24px 0 0",
+                                backgroundColor: "#FAFAFA",
+                                position: "absolute",
+                                bottom: 0,
                             }}
                         >
-                            Building the Future...
-                        </Typography>
+                            <Typography sx={{ fontSize: '14px' }}>WELCOME BACK!</Typography>
+                            <Typography variant="h5" fontWeight="bold" mb={2}>
+                                Log In to your Account
+                            </Typography>
 
-                        <Typography
-                            variant="body1"
-                            sx={{
-                                textAlign: "left", // Left-align text
-                                maxWidth: "380px", // Match Figma layout
-                                mt: 1,
-                            }}
-                        >
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </Typography>
-                    </Box>
-                </Grid>
+                            {error && <Alert severity="error">{error}</Alert>}
 
-                {/* Right Section with Login Form */}
-                <Grid
-                    item
-                    xs={12}
-                    md={6}
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative", // Ensure relative positioning
-                        height: "100vh", // Full screen height
-                    }}
-                >
-
-                <Paper
-                        elevation={6}
-                        sx={{
-                            width: "90vw",
-                            maxWidth: "400px",
-                            padding: 4,
-                            borderRadius: "24px 24px 0 0", // Rounded top corners only
-                            backgroundColor: "#FAFAFA",
-                            position: "absolute", // Stick to bottom
-                            bottom: 0, // Align at bottom
-                            mb: 0, // Remove negative margin
-                        }}
-                    >
-                    <Box  sx={{
-                        // textAlign: "left"
-                    }}
-                    >
-                    <Typography>
-                            WELCOME BACK!
-                        </Typography>
-                        <Typography variant="h5" fontWeight="bold" mb={2}>
-                            Log In to your Account
-                        </Typography>
-                    </Box>
-
-                        {error && <Alert severity="error">{error}</Alert>}
-
-                        <Box component="form" onSubmit={handleLogin} sx={{ mt: 2 }}>
-                            <TextField
-                                fullWidth
-                                label="Email"
-                                variant="outlined"
-                                margin="normal"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                InputLabelProps={{ shrink: false }} // Disable label shrink effect
-                            />
-                            <TextField
-                                fullWidth
-                                label="Password"
-                                type="password"
-                                variant="outlined"
-                                margin="normal"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                InputLabelProps={{ shrink: false }} // Disable label shrink effect
-                            />
-
-
-                            <Box
-                                display="flex"
-                                justifyContent="space-between"
-                                alignItems="center"
-                                mt={1}
-                                sx={{ fontSize: '12px' }} // This doesn't automatically apply to children
-                            >
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            sx={{
-                                                '&.Mui-checked': { color: "red" },
-                                            }}
-                                        />
-                                    }
-                                    label={
-                                        <Typography sx={{ fontSize: "12px" }}>Remember me</Typography> // Explicit font size
-                                    }
+                            <Box component="form" onSubmit={handleLogin} sx={{ mt: 2 }}>
+                                <Typography sx={{ fontSize: "14px", fontWeight: "bold" }}>Email</Typography>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    margin="normal"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    InputLabelProps={{ shrink: false }}
+                                    sx={{
+                                        "& .MuiOutlinedInput-root": {
+                                            "& fieldset": { borderColor: "#BDBDBD" },
+                                            "&:hover fieldset": { borderColor: "black" },
+                                            "&.Mui-focused fieldset": { borderColor: "black" },
+                                            "& input": { color: "black" },
+                                        },
+                                    }}
                                 />
-                                <Typography variant="body2" sx={{ cursor: "pointer", fontSize: "12px" }}>
-                                    Forgot Password?
-                                </Typography>
-                            </Box>
 
+                                <Typography sx={{ fontSize: "14px", fontWeight: "bold", mt: 2 }}>Password</Typography>
+                                <TextField
+                                    fullWidth
+                                    type="password"
+                                    variant="outlined"
+                                    margin="normal"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    InputLabelProps={{ shrink: false }}
+                                    sx={{
+                                        "& .MuiOutlinedInput-root": {
+                                            "& fieldset": { borderColor: "#BDBDBD" },
+                                            "&:hover fieldset": { borderColor: "black" },
+                                            "&.Mui-focused fieldset": { borderColor: "black" },
+                                            "& input": { color: "black" },
+                                        },
+                                    }}
+                                />
 
+                                <Box display="flex" justifyContent="space-between" alignItems="center" mt={1} sx={{ fontSize: '12px' }}>
+                                    <FormControlLabel
+                                        control={<Checkbox sx={{ '&.Mui-checked': { color: "red" } }} />}
+                                        label={<Typography sx={{ fontSize: "12px" }}>Remember me</Typography>}
+                                    />
+                                    <Typography variant="body2" sx={{ cursor: "pointer", fontSize: "12px" }}>
+                                        Forgot Password?
+                                    </Typography>
+                                </Box>
 
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 2, mb: 2, bgcolor: "red", color: "white", fontWeight: "bold", borderRadius: 2 }}
-                            >
-                                Log In
-                            </Button>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{
+                                        mt: 2,
+                                        mb: 2,
+                                        bgcolor: "red",
+                                        color: "white",
+                                        fontWeight: "bold",
+                                        borderRadius: 2,
+                                        boxShadow: "none",
+                                        "&:hover": { bgcolor: "red", boxShadow: "none" }
+                                    }}
+                                >
+                                    Log In
+                                </Button>
 
                             <Divider sx={{ my: 2 }}>Or</Divider>
 
-                            {/* Social Login Buttons */}
-                            <Button fullWidth variant="outlined" startIcon={<Google />} sx={{ mb: 1 }}>
-                                Log In with Google
-                            </Button>
-                            <Button fullWidth variant="outlined" startIcon={<Facebook />} sx={{ mb: 1 }}>
-                                Log In with Facebook
-                            </Button>
-                            <Button fullWidth variant="outlined" startIcon={<Apple />} sx={{ mb: 2 }}>
-                                Log In with Apple
-                            </Button>
+                                <Box sx={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
+                                    {[
+                                        { icon: (
+                                                <Box sx={{ fontSize: "24px" }}>
+                                                    <GoogleIcon />
+                                                </Box>
+                                            ), text: "Log In with Google" },
+                                        { icon: (
+                                                <Box sx={{ fontSize: "24px" }}>
+                                                    <FacebookIcon />
+                                                </Box>
+                                            ), text: "Log In with Facebook" },
+                                        { icon: (
+                                                <Box sx={{ fontSize: "24px" }}>
+                                                    <AppleIcon />
+                                                </Box>
+                                            ), text: "Log In with Apple" },
 
-                            <Typography variant="body2" textAlign="center" mt={2}>
-                                New User?{" "}
-                                <strong style={{ cursor: "pointer", textDecoration: "underline" }}>
-                                    SIGN UP HERE
-                                </strong>
-                            </Typography>
+                                    ].map(({ icon, text }, index) => (
+                                        <Button
+                                            key={index}
+                                            fullWidth
+                                            variant="outlined"
+                                            sx={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                textTransform: "none",
+                                                fontSize: "16px",
+                                                color: "#616161",
+                                                borderColor: "#9E9E9E",
+                                                borderWidth: "1.5px",
+                                                padding: "12px 16px",
+                                                gap: "12px",
+                                                borderRadius: "12px",
+                                                position: "relative",
+                                            }}
+                                        >
+                                            <Box sx={{ position: "absolute", left: "28px", display: "flex", alignItems: "center" }}>
+                                                {icon}
+                                            </Box>
+                                            {text}
+                                        </Button>
+                                    ))}
+                                </Box>
 
-                        </Box>
-                    </Paper>
-                </Grid>
+                                <Typography variant="body2" textAlign="center" mt={2}>
+                                    New User?{" "}
+                                    <strong style={{ cursor: "pointer", textDecoration: "underline" }}>
+                                        SIGN UP HERE
+                                    </strong>
+                                </Typography>
+
+                            </Box>
+                        </Paper>
+                    </Grid>
                 </Box>
             </Grid>
         </Box>
