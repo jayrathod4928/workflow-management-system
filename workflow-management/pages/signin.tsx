@@ -48,6 +48,10 @@ const LoginPage = () => {
             />
 
             <Grid container sx={{ height: "100vh" }}>
+                <Box sx={{
+                    display: "flex",
+                    gap: '550px'
+                }}>
                 <Grid
                     item
                     xs={12}
@@ -57,7 +61,6 @@ const LoginPage = () => {
                         flexDirection: "column",
                         justifyContent: "center",
                         paddingLeft: '200px',
-                        paddingRight: '560px',
                     }}
                 >
                     <Box>
@@ -114,13 +117,17 @@ const LoginPage = () => {
                             mb: 0, // Remove negative margin
                         }}
                     >
-
-                    <Typography variant="h6" fontWeight="bold" textAlign="center" gutterBottom>
+                    <Box  sx={{
+                        // textAlign: "left"
+                    }}
+                    >
+                    <Typography>
                             WELCOME BACK!
                         </Typography>
-                        <Typography variant="h5" fontWeight="bold" textAlign="center" mb={2}>
+                        <Typography variant="h5" fontWeight="bold" mb={2}>
                             Log In to your Account
                         </Typography>
+                    </Box>
 
                         {error && <Alert severity="error">{error}</Alert>}
 
@@ -132,6 +139,7 @@ const LoginPage = () => {
                                 margin="normal"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                InputLabelProps={{ shrink: false }} // Disable label shrink effect
                             />
                             <TextField
                                 fullWidth
@@ -141,14 +149,35 @@ const LoginPage = () => {
                                 margin="normal"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                InputLabelProps={{ shrink: false }} // Disable label shrink effect
                             />
 
-                            <Box display="flex" justifyContent="space-between" alignItems="center" mt={1}>
-                                <FormControlLabel control={<Checkbox color="primary" />} label="Remember me" />
-                                <Typography variant="body2" sx={{ color: "blue", cursor: "pointer" }}>
+
+                            <Box
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                mt={1}
+                                sx={{ fontSize: '12px' }} // This doesn't automatically apply to children
+                            >
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            sx={{
+                                                '&.Mui-checked': { color: "red" },
+                                            }}
+                                        />
+                                    }
+                                    label={
+                                        <Typography sx={{ fontSize: "12px" }}>Remember me</Typography> // Explicit font size
+                                    }
+                                />
+                                <Typography variant="body2" sx={{ cursor: "pointer", fontSize: "12px" }}>
                                     Forgot Password?
                                 </Typography>
                             </Box>
+
+
 
                             <Button
                                 type="submit"
@@ -173,11 +202,16 @@ const LoginPage = () => {
                             </Button>
 
                             <Typography variant="body2" textAlign="center" mt={2}>
-                                New User? <strong style={{ color: "blue", cursor: "pointer" }}>SIGN UP HERE</strong>
+                                New User?{" "}
+                                <strong style={{ cursor: "pointer", textDecoration: "underline" }}>
+                                    SIGN UP HERE
+                                </strong>
                             </Typography>
+
                         </Box>
                     </Paper>
                 </Grid>
+                </Box>
             </Grid>
         </Box>
     );
