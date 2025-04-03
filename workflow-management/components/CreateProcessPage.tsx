@@ -76,9 +76,21 @@ export default function WorkflowBuilder() {
     };
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", height: "100vh", p: 3, backgroundColor: "#F2E3C3" }}>
-            <Box sx={{ width: "100%", display: "flex", justifyContent: "flex-start", mb: 2 }}>
-                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "fit-content", minWidth: "300px", backgroundColor: "white", borderRadius: "16px", padding: "10px 16px", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}>
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                height: "100vh",
+                p: 3,
+                backgroundColor: "#F2E3C3",
+                backgroundImage: "radial-gradient(circle, rgba(0, 0, 0, 0.15), transparent 2px)",
+                backgroundSize: "24px 24px",
+                backgroundPosition: "0 0",
+            }}
+        >
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "flex-start", mb: 2 }}>
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "fit-content", minWidth: "300px", backgroundColor: "white", borderRadius: "16px", padding: "10px 16px" }}>
                     <Button onClick={() => router.push("/work-flow-list-view")} sx={{ fontSize: { xs: "12px", sm: "16px" }, fontWeight: "bold", color: "black", textDecoration: "underline", "&:hover": { textDecoration: "underline" } }}>
                         &larr; Go Back
                     </Button>
