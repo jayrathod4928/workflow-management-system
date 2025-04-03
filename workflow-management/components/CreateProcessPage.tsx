@@ -7,6 +7,8 @@ import { AddArrowIcon } from "@/components/Icons/AddArrowIcon";
 import { DeleteIcon } from "@/components/Icons/DeleteIcon";
 import { SaveIcon } from "@/components/Icons/SaveIcon";
 import CloseIcon from '@mui/icons-material/Close';
+import {YesIcon} from "@/components/Icons/YesIcon";
+import {NoIcon} from "@/components/Icons/NoIcon";
 
 export default function WorkflowBuilder() {
     const router = useRouter();
@@ -156,20 +158,23 @@ export default function WorkflowBuilder() {
 
                         {selectedStepId === step.id && (
                             <Box sx={{ bgcolor: "white", p: 2, borderRadius: "10px", width: "100%", maxWidth: "300px" }}>
-                                <Typography>{step.type} Data</Typography>
-                                <TextField
-                                    fullWidth
-                                    sx={{ mt: 1 }}
-                                    label="Data"
-                                    size="small"
-                                    value={step.data}
-                                    onChange={(e) => handleInputChange(step.id, "data", e.target.value)}
-                                />
+                                <Typography color="black">{step.type}</Typography>
+
+                                {step.type !== "TextBox" && (
+                                    <TextField
+                                        fullWidth
+                                        sx={{ mt: 1 }}
+                                        label="Email"
+                                        size="small"
+                                        value={step.data}
+                                        onChange={(e) => handleInputChange(step.id, "data", e.target.value)}
+                                    />
+                                )}
+
                                 {step.type === "TextBox" && (
                                     <TextField
                                         fullWidth
                                         sx={{ mt: 2 }}
-                                        label="Description"
                                         multiline
                                         rows={3}
                                         size="small"
@@ -178,6 +183,7 @@ export default function WorkflowBuilder() {
                                     />
                                 )}
                             </Box>
+
                         )}
 
                         {index !== steps.length - 1 && (
@@ -196,22 +202,47 @@ export default function WorkflowBuilder() {
                     </IconButton>
 
                     <Typography variant="h6" fontWeight="bold">Save your workflow</Typography>
-                    <TextField fullWidth label="Name" variant="outlined" sx={{ mt: 2 }} placeholder="Enter workflow name" />
-                    <TextField fullWidth label="Description" variant="outlined" multiline rows={3} sx={{ mt: 2 }} placeholder="Enter workflow description" />
-                    <Button variant="contained" color="error" sx={{ mt: 3 }} onClick={handleConfirmSave}>
-                        Save
-                    </Button>
+                    <Typography fontSize={'14px'} mt={2}>Name</Typography>
+                    <TextField fullWidth variant="outlined" sx={{ mt: 1 }} placeholder="Type Here..." />
+                    <Typography fontSize={'14px'} mt={2}>Description</Typography>
+                    <TextField fullWidth variant="outlined" multiline rows={3} sx={{ mt: 2, mb: '125px' }} placeholder="Type Here..." />
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            mt: 2,
+                            backgroundColor: "transparent",
+                            boxShadow: "none",
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            color="error"
+                            sx={{
+                                boxShadow: "none",
+                            }}
+                            onClick={handleConfirmSave}
+                        >
+                            Save
+                        </Button>
+                    </Box>
+
                 </Box>
             </Modal>
 
             <Modal open={confirmModal} onClose={() => setConfirmModal(false)}>
-                <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: '400px', bgcolor: "white", color: 'black', boxShadow: 24, p: 4, borderRadius: "12px", position: "relative" }}>
+                <Box sx={{ width: "596px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",  bgcolor: "white", color: 'black', boxShadow: 24, p: 4, borderRadius: "12px", position: "relative" }}>
                     <Typography variant="h6" fontWeight="bold">Confirm Save</Typography>
-                    <Typography sx={{ mt: 2 }}>Are you sure you want to save this workflow?</Typography>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}>
-                        <Button variant="contained" color="error" onClick={handleSaveWorkflow}>Yes, Save</Button>
-                        <Button variant="outlined" color="primary" onClick={() => setConfirmModal(false)}>Cancel</Button>
+                    <Typography sx={{ mt: 2 }}>&#34;Are you sure you want to Execute the process?&#34;</Typography>
+                    <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: '0px' }}>
+                        <IconButton onClick={handleSaveWorkflow} sx={{ ml: 2 }}>
+                            <YesIcon />
+                        </IconButton>
+                        <IconButton onClick={() => setConfirmModal(false)}>
+                            <NoIcon />
+                        </IconButton>
                     </Box>
+
                 </Box>
             </Modal>
         </Box>
