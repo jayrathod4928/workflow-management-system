@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { useRef } from "react";
-import { Box, Button, IconButton, Typography, TextField, Modal } from "@mui/material";
+import {Box, Button, IconButton, Typography, TextField, Modal, Slider} from "@mui/material";
 import { useRouter } from "next/router";
 import { StartIcon } from "@/components/Icons/StartIcon";
 import { EndIcon } from "@/components/Icons/EndIcon";
@@ -10,10 +11,25 @@ import { SaveIcon } from "@/components/Icons/SaveIcon";
 import CloseIcon from '@mui/icons-material/Close';
 import {YesIcon} from "@/components/Icons/YesIcon";
 import {NoIcon} from "@/components/Icons/NoIcon";
+import ZoomOutIcon from '@mui/icons-material/ZoomOut';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+
+ type YourType = {
+    id: number;
+    type: string;
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data?: any;
+    description?: string;
+};
+
+type ZoomControlProps = {
+    zoomLevel: number;
+    setZoomLevel: React.Dispatch<React.SetStateAction<number>>;
+};
 
 export default function WorkflowBuilder() {
     const router = useRouter();
-    const [steps, setSteps] = useState([
+    const [steps, setSteps] = useState<YourType[]>([
         { id: 1, type: "Start" },
         { id: 2, type: "End" }
     ]);
@@ -24,6 +40,7 @@ export default function WorkflowBuilder() {
     const [confirmModal, setConfirmModal] = useState(false);
     const workflowNameRef = useRef<HTMLInputElement | null>(null);
     const workflowDescriptionRef = useRef<HTMLTextAreaElement | null>(null);
+    const [zoomLevel, setZoomLevel] = useState(1);
 
     const handleAddStep = (index: number) => {
         setStepCounter((prev) => prev + 1);
@@ -39,6 +56,48 @@ export default function WorkflowBuilder() {
 
     const handleConfirmSave = () => {
         setConfirmModal(true);
+    };
+
+    const ZoomControl: React.FC<ZoomControlProps> = ({ zoomLevel, setZoomLevel }) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const handleZoomChange = (_: any, newValue: number) => {
+            setZoomLevel(newValue / 100);
+        };
+
+        return (
+            <Box
+                sx={{
+                    position: "fixed",
+                    bottom: 16,
+                    right: 16,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    bgcolor: "white",
+                    p: 1,
+                    borderRadius: "16px",
+                    boxShadow: 2,
+                    width: "250px",
+                }}
+            >
+                <IconButton onClick={() => setZoomLevel((prev) => Math.max(prev - 0.1, 0.5))}>
+                    <ZoomOutIcon />
+                </IconButton>
+
+                <Slider
+                    value={zoomLevel * 100}
+                    min={50}
+                    max={200}
+                    step={10}
+                    onChange={handleZoomChange}
+                    sx={{ flex: 1, color: "grey" }}
+                />
+
+                <IconButton onClick={() => setZoomLevel((prev: number) => Math.min(prev + 0.1, 2))}>
+                    <ZoomInIcon />
+                </IconButton>
+            </Box>
+        );
     };
 
     const handleSaveWorkflow = () => {
@@ -63,7 +122,7 @@ export default function WorkflowBuilder() {
             favorite: false,
         };
 
-        const storedWorkflows = JSON.parse(localStorage.getItem("workflowData")) || [];
+        const storedWorkflows = JSON.parse(localStorage.getItem("workflowData") as string) || [];
         const updatedWorkflows = [...storedWorkflows, newWorkflow];
 
         localStorage.setItem("workflowData", JSON.stringify(updatedWorkflows));
@@ -99,6 +158,7 @@ export default function WorkflowBuilder() {
                 backgroundPosition: "0 0",
             }}
         >
+
         <Box sx={{ width: "100%", display: "flex", justifyContent: "flex-start", mb: 2 }}>
                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "fit-content", minWidth: "300px", backgroundColor: "white", borderRadius: "16px", padding: "10px 16px" }}>
                     <Button onClick={() => router.push("/work-flow-list-view")} sx={{ fontSize: { xs: "12px", sm: "16px" }, fontWeight: "bold", color: "black", textDecoration: "underline", "&:hover": { textDecoration: "underline" } }}>
@@ -111,7 +171,11 @@ export default function WorkflowBuilder() {
                 </Box>
             </Box>
 
-            <Box>
+            <Box sx={{
+                transform: `scale(${zoomLevel})`,
+                transformOrigin: "top center",
+                transition: "transform 0.2s ease-in-out",
+            }}>
                 {steps.map((step, index) => (
                     <Box key={step.id} sx={{ display: "flex", flexDirection: "column", alignItems: "center"}}>
                         <Box
@@ -172,7 +236,7 @@ export default function WorkflowBuilder() {
                                     <TextField
                                         fullWidth
                                         sx={{ mt: 1 }}
-                                        label="Email"
+                                        placeholder="Email"
                                         size="small"
                                         value={step.data}
                                         onChange={(e) => handleInputChange(step.id, "data", e.target.value)}
@@ -183,6 +247,7 @@ export default function WorkflowBuilder() {
                                     <TextField
                                         fullWidth
                                         sx={{ mt: 2 }}
+                                        placeholder="TextBox"
                                         multiline
                                         rows={3}
                                         size="small"
@@ -195,7 +260,7 @@ export default function WorkflowBuilder() {
                         )}
 
                         {index !== steps.length - 1 && (
-                            <IconButton onClick={() => handleAddStep(index)} sx={{ fontSize: { xs: "14px", sm: "18px", padding: '0px' } }}>
+                            <IconButton onClick={() => handleAddStep(index)} sx={{ fontSize: { xs: "14px", sm: "18px" }, padding: '0px' }}>
                                 <AddArrowIcon />
                             </IconButton>
                         )}
@@ -204,7 +269,7 @@ export default function WorkflowBuilder() {
             </Box>
 
             <Modal open={openModal} onClose={() => setOpenModal(false)}>
-                <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: '600px', bgcolor: "white", color: 'black', boxShadow: 24, p: 4, borderRadius: "12px", position: "relative" }}>
+                <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: '600px', bgcolor: "white", color: 'black', boxShadow: 24, p: 4, borderRadius: "12px" }}>
                     <IconButton onClick={() => setOpenModal(false)} sx={{ position: "absolute", top: 24, right: 20, color: "black" }}>
                         <CloseIcon />
                     </IconButton>
@@ -239,7 +304,7 @@ export default function WorkflowBuilder() {
             </Modal>
 
             <Modal open={confirmModal} onClose={() => setConfirmModal(false)}>
-                <Box sx={{ width: "596px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",  bgcolor: "white", color: 'black', boxShadow: 24, p: 4, borderRadius: "12px", position: "relative" }}>
+                <Box sx={{ width: "596px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",  bgcolor: "white", color: 'black', boxShadow: 24, p: 4, borderRadius: "12px"}}>
                     <Typography variant="h6" fontWeight="bold">Confirm Save</Typography>
                     <Typography sx={{ mt: 2 }}>&#34;Are you sure you want to Execute the process?&#34;</Typography>
                     <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: '0px' }}>
@@ -253,6 +318,7 @@ export default function WorkflowBuilder() {
 
                 </Box>
             </Modal>
+            <ZoomControl zoomLevel={zoomLevel} setZoomLevel={setZoomLevel} />
         </Box>
     );
 }

@@ -20,19 +20,18 @@ import {
     DialogContent,
     DialogTitle,
     TextField,
-    Tooltip, InputAdornment
+    Tooltip, InputAdornment, TooltipProps
 } from "@mui/material";
-import {MoreVert, ExpandMore, ExpandLess, Search} from "@mui/icons-material";
+import {MoreVert, Search} from "@mui/icons-material";
 import { ExecuteButton } from "@/components/Icons/ExecuteButton";
 import { EditIcon } from "@/components/Icons/EditIcon";
-import { CreateNewProcess } from "@/components/Icons/CreateNewProcess";
 import { UnPinIcon } from "@/components/Icons/UnPinIcon";
 import { PinIcon } from "@/components/Icons/PinIcon";
 import { styled } from "@mui/material/styles";
 import {ExpandLessIcon} from "@/components/Icons/ExpandLess";
 import {ExpandMoreIcon} from "@/components/Icons/ExpandMore";
 
-const DeleteTooltip = styled(({ className, ...props }) => (
+const DeleteTooltip = styled(({ className, ...props }: TooltipProps & { className?: string }) => (
     <Tooltip {...props} classes={{ popper: className }} arrow />
 ))(() => ({
     [`& .MuiTooltip-tooltip`]: {
@@ -48,62 +47,76 @@ const DeleteTooltip = styled(({ className, ...props }) => (
     },
 }));
 
+interface WorkflowData {
+    id: number;
+    name: string;
+    description?: string;
+    favorite?: boolean;
+    editedOn?: string;
+}
+
 export default function WorkflowTable() {
     const router = useRouter();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [data, setData] = useState([]);
-    const [expandedRow, setExpandedRow] = useState(null);
+    const [data, setData] = useState<WorkflowData[]>([]);
+    const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [editOpen, setEditOpen] = useState(false);
-    const [editData, setEditData] = useState(null);
+    const [editData, setEditData] = useState<WorkflowData | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-    const [selectedRowId, setSelectedRowId] = useState(null);
-
+    const [selectedRowId, setSelectedRowId] = useState<number | null>(null);
 
     useEffect(() => {
-        const storedData = JSON.parse(localStorage.getItem("workflowData")) || [];
-        setData(storedData);
+        const storedData = localStorage.getItem("workflowData");
+        const parsedData = storedData ? JSON.parse(storedData) : [];
+        setData(parsedData);
     }, []);
 
-    const handleChangePage = (event, newPage) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleChangePage = (event: any, newPage: React.SetStateAction<number>) => {
         setPage(newPage);
     };
 
-    const handleChangeRowsPerPage = (event) => {
+    const handleChangeRowsPerPage = (event: { target: { value: string; }; }) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
 
-    const toggleFavorite = (index) => {
+    const toggleFavorite = (index: number) => {
         const newData = [...data];
         newData[index].favorite = !newData[index].favorite;
         setData(newData);
         localStorage.setItem("workflowData", JSON.stringify(newData));
     };
 
-    const toggleExpand = (index) => {
-        setExpandedRow(expandedRow === index ? null : index);
+    const toggleExpand = (index: number) => {
+        setExpandedRow((prev) => (prev === index ? null : index));
     };
 
-    const handleEdit = (row: React.SetStateAction<null>) => {
-        setEditData({ ...row });
+    const handleEdit = (row: WorkflowData) => {
+        setEditData(row);
         setEditOpen(true);
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleEditChange = (e: { target: { name: any; value: any; }; }) => {
-        setEditData({ ...editData, [e.target.name]: e.target.value });
+        setEditData({description: "", id: 0, name: "", ...editData, [e.target.name]: e.target.value });
     };
 
     const handleSaveEdit = () => {
-        const updatedData = data.map((item) =>
-            item.id === editData.id ? editData : item
+        if (!editData) return;
+
+        const updatedData: WorkflowData[] = data.map((item) =>
+            item.id === editData.id ? { ...editData } : item
         );
+
         setData(updatedData);
         localStorage.setItem("workflowData", JSON.stringify(updatedData));
         setEditOpen(false);
     };
-    const handleOpenDeleteDialog = (id) => {
+
+    const handleOpenDeleteDialog = (id: number) => {
         setSelectedRowId(id);
         setDeleteConfirmOpen(true);
     };
@@ -336,7 +349,9 @@ export default function WorkflowTable() {
                         />
                     </DialogContent>
                     <DialogActions sx={{ p: '20px' }}>
-                        <Button color={'black'} onClick={() => setEditOpen(false)}>Cancel</Button>
+                        <Button sx={{  color: 'black' }} onClick={() => setEditOpen(false)}>
+                            Cancel
+                        </Button>
                         <Button onClick={handleSaveEdit} variant="contained" color="error" >Save</Button>
                     </DialogActions>
                 </Box>
