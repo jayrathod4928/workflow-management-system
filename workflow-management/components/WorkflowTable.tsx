@@ -55,6 +55,8 @@ export default function WorkflowTable() {
     const [editOpen, setEditOpen] = useState(false);
     const [editData, setEditData] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+    const [selectedRowId, setSelectedRowId] = useState(null);
 
 
     useEffect(() => {
@@ -99,9 +101,23 @@ export default function WorkflowTable() {
         localStorage.setItem("workflowData", JSON.stringify(updatedData));
         setEditOpen(false);
     };
-    const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value);
+    const handleOpenDeleteDialog = (id) => {
+        setSelectedRowId(id);
+        setDeleteConfirmOpen(true);
     };
+
+    const handleCloseDeleteDialog = () => {
+        setDeleteConfirmOpen(false);
+        setSelectedRowId(null);
+    };
+
+    const handleDelete = () => {
+        const updatedData = data.filter(row => row.id !== selectedRowId);
+        setData(updatedData);
+        localStorage.setItem("workflowData", JSON.stringify(updatedData));
+        handleCloseDeleteDialog();
+    };
+
     const filteredData = data.filter((row) =>
         row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         row.id.toString().includes(searchQuery)
@@ -226,11 +242,20 @@ export default function WorkflowTable() {
                                             <IconButton size="small" onClick={() => handleEdit(row)}>
                                                 <EditIcon />
                                             </IconButton>
-                                            <DeleteTooltip title={<Typography>Delete</Typography>} placement="bottom">
+                                            <DeleteTooltip
+                                                title={
+                                                    <Typography onClick={() => handleOpenDeleteDialog(row.id)} style={{ cursor: 'pointer' }}>
+                                                        Delete
+                                                    </Typography>
+                                                }
+                                                placement="bottom"
+                                            >
                                                 <IconButton>
                                                     <MoreVert />
                                                 </IconButton>
                                             </DeleteTooltip>
+
+
                                         </TableCell>
 
                                         <TableCell>
@@ -302,6 +327,16 @@ export default function WorkflowTable() {
                 <DialogActions>
                     <Button onClick={() => setEditOpen(false)}>Cancel</Button>
                     <Button onClick={handleSaveEdit} variant="contained">Save</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={deleteConfirmOpen} onClose={handleCloseDeleteDialog}>
+                <DialogTitle>Confirm Deletion</DialogTitle>
+                <DialogContent>
+                    <Typography>Are you sure you want to delete this workflow?</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
+                    <Button onClick={handleDelete} variant="contained" color="error">Delete</Button>
                 </DialogActions>
             </Dialog>
         </Box>
