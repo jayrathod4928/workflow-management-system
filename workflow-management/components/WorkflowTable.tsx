@@ -79,7 +79,7 @@ export default function WorkflowTable() {
     };
 
     return (
-        <Paper sx={{ width: "100%", overflow: "hidden", padding: 2 }}>
+        <Paper sx={{ width: "100%", height:'100vh', overflow: "hidden", padding: 2 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="h6">Workflow List</Typography>
                 <Button
