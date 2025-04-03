@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRef } from "react";
 import { Box, Button, IconButton, Typography, TextField, Modal } from "@mui/material";
 import { useRouter } from "next/router";
 import { StartIcon } from "@/components/Icons/StartIcon";
@@ -21,6 +22,8 @@ export default function WorkflowBuilder() {
     const [selectedStepId, setSelectedStepId] = useState<number | null>(null);
     const [openModal, setOpenModal] = useState(false);
     const [confirmModal, setConfirmModal] = useState(false);
+    const workflowNameRef = useRef<HTMLInputElement | null>(null);
+    const workflowDescriptionRef = useRef<HTMLTextAreaElement | null>(null);
 
     const handleAddStep = (index: number) => {
         setStepCounter((prev) => prev + 1);
@@ -39,8 +42,13 @@ export default function WorkflowBuilder() {
     };
 
     const handleSaveWorkflow = () => {
-        const workflowName = document.querySelector('input[placeholder="Enter workflow name"]').value;
-        const workflowDescription = document.querySelector('textarea[placeholder="Enter workflow description"]').value;
+        if (!workflowNameRef.current || !workflowDescriptionRef.current) {
+            alert("Workflow name or description input not found!");
+            return;
+        }
+
+        const workflowName = workflowNameRef.current.value;
+        const workflowDescription = workflowDescriptionRef.current.value;
 
         if (!workflowName.trim()) {
             alert("Workflow name is required!");
@@ -62,7 +70,7 @@ export default function WorkflowBuilder() {
 
         setOpenModal(false);
         setConfirmModal(false);
-        router.push("/work-flow-list-view"); // Redirect back to the list
+        router.push("/work-flow-list-view");
     };
 
     const handleRemoveStep = (id: number) => {
@@ -203,9 +211,9 @@ export default function WorkflowBuilder() {
 
                     <Typography variant="h6" fontWeight="bold">Save your workflow</Typography>
                     <Typography fontSize={'14px'} mt={2}>Name</Typography>
-                    <TextField fullWidth variant="outlined" sx={{ mt: 1 }} placeholder="Type Here..." />
+                    <TextField fullWidth variant="outlined" sx={{ mt: 1 }} placeholder="Name here" inputRef={workflowNameRef} />
                     <Typography fontSize={'14px'} mt={2}>Description</Typography>
-                    <TextField fullWidth variant="outlined" multiline rows={3} sx={{ mt: 2, mb: '125px' }} placeholder="Type Here..." />
+                    <TextField fullWidth variant="outlined" multiline rows={3} sx={{ mt: 2, mb: '125px' }} placeholder="Write here.." inputRef={workflowDescriptionRef} />
                     <Box
                         sx={{
                             display: "flex",

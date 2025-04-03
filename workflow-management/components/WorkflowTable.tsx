@@ -29,6 +29,8 @@ import { CreateNewProcess } from "@/components/Icons/CreateNewProcess";
 import { UnPinIcon } from "@/components/Icons/UnPinIcon";
 import { PinIcon } from "@/components/Icons/PinIcon";
 import { styled } from "@mui/material/styles";
+import {ExpandLessIcon} from "@/components/Icons/ExpandLess";
+import {ExpandMoreIcon} from "@/components/Icons/ExpandMore";
 
 const DeleteTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} arrow />
@@ -84,12 +86,12 @@ export default function WorkflowTable() {
         setExpandedRow(expandedRow === index ? null : index);
     };
 
-    const handleEdit = (row) => {
+    const handleEdit = (row: React.SetStateAction<null>) => {
         setEditData({ ...row });
         setEditOpen(true);
     };
 
-    const handleEditChange = (e) => {
+    const handleEditChange = (e: { target: { name: any; value: any; }; }) => {
         setEditData({ ...editData, [e.target.name]: e.target.value });
     };
 
@@ -226,7 +228,13 @@ export default function WorkflowTable() {
 
                                         <TableCell>{row.editedOn}</TableCell>
 
-                                        <TableCell sx={{ maxWidth: 250, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                        <TableCell  sx={{
+                                            maxWidth: 230,
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            whiteSpace: "nowrap",
+                                            wordBreak: "break-word", // Ensures long words break properly
+                                        }}>
                                             <Tooltip title={row.description || "No Description"} arrow>
                                                 <Typography noWrap>{row.description || "No Description"}</Typography>
                                             </Tooltip>
@@ -260,7 +268,7 @@ export default function WorkflowTable() {
 
                                         <TableCell>
                                             <IconButton onClick={() => toggleExpand(index)}>
-                                                {expandedRow === index ? <ExpandLess /> : <ExpandMore />}
+                                                {expandedRow === index ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                                             </IconButton>
                                         </TableCell>
                                     </TableRow>
@@ -303,31 +311,35 @@ export default function WorkflowTable() {
                 />
             </Paper>
             <Dialog open={editOpen} onClose={() => setEditOpen(false)}>
-                <DialogTitle>Edit Process</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        margin="dense"
-                        label="Process Name"
-                        name="name"
-                        fullWidth
-                        value={editData?.name || ""}
-                        onChange={handleEditChange}
-                    />
-                    <TextField
-                        margin="dense"
-                        label="Description"
-                        name="description"
-                        fullWidth
-                        multiline
-                        rows={4}
-                        value={editData?.description || ""}
-                        onChange={handleEditChange}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setEditOpen(false)}>Cancel</Button>
-                    <Button onClick={handleSaveEdit} variant="contained">Save</Button>
-                </DialogActions>
+                <Box sx={{ width: "400px" }}> {/* Set width here */}
+                    <DialogTitle>Edit Process</DialogTitle>
+                    <DialogContent>
+                        <Typography fontSize={'14px'} >Name</Typography>
+                        <TextField
+                            margin="dense"
+                            placeholder="Process Name"
+                            name="name"
+                            fullWidth
+                            value={editData?.name || ""}
+                            onChange={handleEditChange}
+                        />
+                        <Typography fontSize={'14px'} mt={'14px'}>Description</Typography>
+                        <TextField
+                            margin="dense"
+                            placeholder="Description"
+                            name="description"
+                            fullWidth
+                            multiline
+                            rows={4}
+                            value={editData?.description || ""}
+                            onChange={handleEditChange}
+                        />
+                    </DialogContent>
+                    <DialogActions sx={{ p: '20px' }}>
+                        <Button color={'black'} onClick={() => setEditOpen(false)}>Cancel</Button>
+                        <Button onClick={handleSaveEdit} variant="contained" color="error" >Save</Button>
+                    </DialogActions>
+                </Box>
             </Dialog>
             <Dialog open={deleteConfirmOpen} onClose={handleCloseDeleteDialog}>
                 <DialogTitle>Confirm Deletion</DialogTitle>
