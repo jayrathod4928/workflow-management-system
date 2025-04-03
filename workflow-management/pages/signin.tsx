@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Box, Button, Checkbox, FormControlLabel, Grid, Paper, TextField, Typography, Alert, Divider } from "@mui/material";
 import { GoogleIcon } from "@/components/Icons/GoogleIcon";
 import { FacebookIcon } from "@/components/Icons/FacebookIcon";
 import { AppleIcon } from "@/components/Icons/AppleIcon";
 
 const LoginPage = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const router = useRouter();
+    const [email, setEmail] = useState("test@example.com");
+    const [password, setPassword] = useState("password123");
     const [error, setError] = useState("");
 
     const handleLogin = (e: React.FormEvent) => {
@@ -26,8 +28,8 @@ const LoginPage = () => {
         }
 
         if (email === "test@example.com" && password === "password123") {
-            alert("Login Successful!");
             localStorage.setItem("user", email);
+            router.push("/dashboard");
         } else {
             setError("Invalid email or password.");
         }
@@ -55,11 +57,11 @@ const LoginPage = () => {
                         <Box>
                             <img src="/logo_highbridge.svg" alt="HighBridge Logo" width="273px" height="60px" />
 
-                            <Typography variant="h4" fontWeight="bold" sx={{ textAlign: "left", mt: 4 }}>
+                            <Typography variant="h4" fontWeight="bold" sx={{ textAlign: "left", mt: '119px' }}>
                                 Building the Future...
                             </Typography>
 
-                            <Typography variant="body1" sx={{ textAlign: "left", maxWidth: "380px", mt: 1 }}>
+                            <Typography variant="body1" sx={{ textAlign: "left", maxWidth: "380px", mt: '24px' }}>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                             </Typography>
                         </Box>
