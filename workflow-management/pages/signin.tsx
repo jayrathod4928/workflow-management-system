@@ -29,7 +29,7 @@ const LoginPage = () => {
 
         if (email === "test@example.com" && password === "password123") {
             localStorage.setItem("user", email);
-            router.push("/dashboard");
+            router.push("/work-flow-list-view");
         } else {
             setError("Invalid email or password.");
         }
