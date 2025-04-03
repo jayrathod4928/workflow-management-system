@@ -346,7 +346,7 @@ export default function WorkflowTable() {
                 <DialogContent>
                     <Typography>Are you sure you want to delete this workflow?</Typography>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions sx={{ p: '20px' }}>
                     <Button sx={{ color: "black" }} onClick={handleCloseDeleteDialog}>Cancel</Button>
                     <Button onClick={handleDelete} variant="contained" color="error">Delete</Button>
                 </DialogActions>
